@@ -21,6 +21,7 @@ public class MoviesActivity extends AppCompatActivity implements ViewPager.OnPag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
+
         viewPager = (ViewPager) findViewById(R.id.movies_view_pager);
 
 

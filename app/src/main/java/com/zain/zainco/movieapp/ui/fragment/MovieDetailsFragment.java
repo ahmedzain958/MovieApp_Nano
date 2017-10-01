@@ -45,7 +45,7 @@ public class MovieDetailsFragment extends Fragment {
 
         Movie movie;
         if (extras != null) {
-            movie = (Movie) getActivity().getIntent().getSerializableExtra("selectedMovie"); //Obtaining data
+            movie = (Movie) getActivity().getIntent().getParcelableExtra("selectedMovie"); //Obtaining data
 
             Picasso.with(getActivity())
                     .load("http://image.tmdb.org/t/p/w185/" + movie.getBackdropPath())

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.zain.zainco.movieapp.R;
 import com.zain.zainco.movieapp.model.Movie;
@@ -17,6 +18,7 @@ import com.zain.zainco.movieapp.ui.activity.MovieDetailsActivity;
 import com.zain.zainco.movieapp.ui.adapter.MoviesAdapter;
 import com.zain.zainco.movieapp.ui.repository.MoviesPresenterImpl;
 import com.zain.zainco.movieapp.ui.repository.MoviesView;
+import com.zain.zainco.movieapp.utils.NetwokConnectivity;
 
 import java.util.ArrayList;
 
@@ -53,12 +55,13 @@ public class TopRatedFragment extends Fragment implements MoviesView {
                 startActivity(new Intent(getActivity(), MovieDetailsActivity.class).putExtra("selectedMovie", selectedMovie));
             }
         });
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             ArrayList<Movie> items = savedInstanceState.getParcelableArrayList("gvState");
             moviesAdapter.setMovies(items); // Load saved data if any.
         }
         return view;
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -76,24 +79,29 @@ public class TopRatedFragment extends Fragment implements MoviesView {
 
     @Override
     public void showMovies(ArrayList<Movie> moviesList) {
-        moviesAdapter = new MoviesAdapter(getActivity(), moviesList);
-        moviesGridView.setAdapter(moviesAdapter);
+        if (new NetwokConnectivity(getActivity()).isNetworkAvailable()) {
+            moviesAdapter = new MoviesAdapter(getActivity(), moviesList);
+            moviesGridView.setAdapter(moviesAdapter);
+        } else {
+            showErrorMessage();
+        }
     }
 
     @Override
     public void showErrorMessage() {
-
+        Toast.makeText(getActivity(), "Can't Connect", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void launchMovieDetail(Movie movie) {
 
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        outState.putParcelableArrayList("gvState", moviesAdapter.getMovies());
+        if (outState != null)
+            outState.putParcelableArrayList("gvState", moviesAdapter.getMovies());
     }
 
 
