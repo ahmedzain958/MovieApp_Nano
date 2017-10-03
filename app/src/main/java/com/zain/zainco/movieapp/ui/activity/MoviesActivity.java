@@ -13,20 +13,25 @@ import com.zain.zainco.movieapp.ui.fragment.TopRatedFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnPageChange;
+
 public class MoviesActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
-    private ViewPager viewPager;
     List<Fragment> listFragment;
+
+    @BindView(R.id.movies_view_pager)
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
-
-        viewPager = (ViewPager) findViewById(R.id.movies_view_pager);
+        ButterKnife.bind(this);
 
 
         //initialing ViewPager
-        viewPager.addOnPageChangeListener(this);
+//        viewPager.addOnPageChangeListener(this);
 
         listFragment = new ArrayList<>();
 
@@ -57,5 +62,9 @@ public class MoviesActivity extends AppCompatActivity implements ViewPager.OnPag
 
     }
 
+    @OnPageChange(R.id.movies_view_pager)
+    public void OnPageChange() {
+        // TODO submit data to server...
+    }
 
 }

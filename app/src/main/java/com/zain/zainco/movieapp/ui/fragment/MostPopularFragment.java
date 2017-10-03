@@ -99,7 +99,7 @@ public class MostPopularFragment extends Fragment implements MoviesView {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (outState != null)
+        if (!outState.containsKey("gvState") && outState.getParcelableArrayList("gvState") != null)
             outState.putParcelableArrayList("gvState", moviesAdapter.getMovies());
     }
 
