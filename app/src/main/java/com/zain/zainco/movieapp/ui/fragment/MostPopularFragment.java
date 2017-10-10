@@ -54,7 +54,7 @@ public class MostPopularFragment extends Fragment implements MoviesView {
                 startActivity(new Intent(getActivity(), MovieDetailsActivity.class).putExtra("selectedMovie", selectedMovie));
             }
         });
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null && savedInstanceState.getParcelableArrayList("gvState") != null) {
             ArrayList<Movie> items = savedInstanceState.getParcelableArrayList("gvState");
             moviesAdapter.setMovies(items); // Load saved data if any.
         }
@@ -78,7 +78,7 @@ public class MostPopularFragment extends Fragment implements MoviesView {
 
     @Override
     public void showMovies(ArrayList<Movie> moviesList) {
-        if (new NetwokConnectivity(getActivity()).isNetworkAvailable()) {
+        if (new NetwokConnectivity().isNetworkAvailable()) {
             moviesAdapter = new MoviesAdapter(getActivity(), moviesList);
             moviesGridView.setAdapter(moviesAdapter);
         } else {
@@ -103,10 +103,5 @@ public class MostPopularFragment extends Fragment implements MoviesView {
             outState.putParcelableArrayList("gvState", moviesAdapter.getMovies());
     }
 
-   /* @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState != null)
-            moviesGridView.smoothScrollToPosition(savedInstanceState.getInt(GRIDVIEW_POSITION));
-    }*/
+
 }

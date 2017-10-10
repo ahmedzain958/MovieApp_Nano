@@ -9,39 +9,11 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- original title
-&#9675; movie poster image thumbnail
-&#9675; A plot synopsis (called overview in the api)
-&#9675; user rating (called vote_average in the api)
-&#9675; release date
- */
 public class Movie implements Parcelable {
-    /* String title;
-     String poster_path;
-     String overview;
-     String vote_count;
-     String release_date;
 
-     public String getTitle() {
-         return title;
-     }
+    public Movie(){
 
-     public String getPoster_path() {
-         return poster_path;
-     }
-
-     public String getOverview() {
-         return overview;
-     }
-
-     public String getVote_count() {
-         return vote_count;
-     }
-
-     public String getRelease_date() {
-         return release_date;
-     }*/
+    }
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;

@@ -35,6 +35,11 @@ public class TopRatedFragment extends Fragment implements MoviesView {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,7 +84,7 @@ public class TopRatedFragment extends Fragment implements MoviesView {
 
     @Override
     public void showMovies(ArrayList<Movie> moviesList) {
-        if (new NetwokConnectivity(getActivity()).isNetworkAvailable()) {
+        if (new NetwokConnectivity().isNetworkAvailable()) {
             moviesAdapter = new MoviesAdapter(getActivity(), moviesList);
             moviesGridView.setAdapter(moviesAdapter);
         } else {
@@ -103,6 +108,8 @@ public class TopRatedFragment extends Fragment implements MoviesView {
         if (!outState.containsKey("gvState") && outState.getParcelableArrayList("gvState") != null)
             outState.putParcelableArrayList("gvState", moviesAdapter.getMovies());
     }
+
+
 
 
 }
