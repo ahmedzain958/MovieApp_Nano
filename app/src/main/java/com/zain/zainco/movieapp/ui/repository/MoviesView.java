@@ -17,5 +17,4 @@ public interface MoviesView {
 
     void showErrorMessage();
 
-    void launchMovieDetail(Movie movie);
 }

@@ -6,10 +6,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".helpers.ApplicationClass"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".helpers.ApplicationClass"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -27,6 +27,10 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_movie_details"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <provider
+            android:name=".app.MoviesProvider"
+            android:authorities="com.zain.zainco.movieapp.app.MoviesProvider" />
     </application>
 
 </manifest>

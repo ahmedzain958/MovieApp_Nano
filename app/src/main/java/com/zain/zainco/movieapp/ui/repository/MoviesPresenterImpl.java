@@ -1,5 +1,6 @@
 package com.zain.zainco.movieapp.ui.repository;
 
+import android.content.Context;
 import android.database.Cursor;
 
 import com.zain.zainco.movieapp.app.Constants;
@@ -19,14 +20,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static com.zain.zainco.movieapp.app.Constants.FAVOURITE;
 import static com.zain.zainco.movieapp.app.Constants.POPULAR;
 import static com.zain.zainco.movieapp.app.Constants.TOP_RATED;
-import static com.zain.zainco.movieapp.database.Constant.AVERAGERATING;
+import static com.zain.zainco.movieapp.app.MoviesProvider._URI;
 import static com.zain.zainco.movieapp.database.Constant.BACKDROPPATH;
 import static com.zain.zainco.movieapp.database.Constant.ID;
-import static com.zain.zainco.movieapp.database.Constant.OVERVIEW;
 import static com.zain.zainco.movieapp.database.Constant.POSTERPATH;
-import static com.zain.zainco.movieapp.database.Constant.REALEASEDATE;
 import static com.zain.zainco.movieapp.database.Constant.TITLE;
-import static com.zain.zainco.movieapp.database.FavouriteDatabase.selectFromFavourite;
 
 public class MoviesPresenterImpl implements MoviesPresenter {
     MoviesView moviesView;
@@ -37,7 +35,7 @@ public class MoviesPresenterImpl implements MoviesPresenter {
     }
 
     @Override
-    public void getMovies(String sortBy) {
+    public void getMovies(String sortBy, Context context) {
         moviesView.showLoading();
 
         Converter.Factory converter = GsonConverterFactory.create();
@@ -78,7 +76,7 @@ public class MoviesPresenterImpl implements MoviesPresenter {
                 }
             });
         } else if (sortBy.equals(FAVOURITE)) {
-            Cursor favouritesCursor = selectFromFavourite("*", "1=1");
+           /* Cursor favouritesCursor = selectFromFavourite("*", "1=1");
             ArrayList<Movie> movieList = new ArrayList<>();
             if (favouritesCursor != null) {
                 while (favouritesCursor.moveToNext()) {
@@ -97,7 +95,30 @@ public class MoviesPresenterImpl implements MoviesPresenter {
                         moviesView.showMovies(movieList);
                     }
                 }
+            }*/
+            ArrayList<Movie> moviesList = new ArrayList<>();
+            Cursor c =context.getContentResolver().query(_URI, null, null, null, null);
+            if (c.moveToFirst()) {
+                while (c.moveToNext()) {
+                    Movie movie = new Movie();
+                    movie.setId(c.getInt(c.getColumnIndex(ID)));
+                    movie.setBackdropPath(c.getString(c.getColumnIndex(BACKDROPPATH)));
+                    movie.setTitle(c.getString(c.getColumnIndex(TITLE)));
+                    movie.setPosterPath(c.getString(c.getColumnIndex(POSTERPATH)));
+              /*  movie.setId(c.getString(c.getColumnIndex(ID)));
+                movie.setId(c.getString(c.getColumnIndex(ID)));
+                movie.setId(c.getString(c.getColumnIndex(ID)));
+                movie.setId(c.getString(c.getColumnIndex(ID)));*/
+                    moviesList.add(movie);
+                }
+            }
+            if (moviesList != null) {
+                if (moviesList.size() > 0) {
+                    moviesView.showMovies(moviesList);
+                }
             }
         }
     }
+
+
 }

@@ -51,7 +51,7 @@ public class TopRatedFragment extends Fragment implements MoviesView {
         presenter = new MoviesPresenterImpl();
         presenter.setView(this);
         moviesGridView = view.findViewById(R.id.movies_gv);
-        presenter.getMovies(TOP_RATED);
+        presenter.getMovies(TOP_RATED, getActivity());
         moviesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView,
@@ -97,10 +97,7 @@ public class TopRatedFragment extends Fragment implements MoviesView {
         Toast.makeText(getActivity(), "Can't Connect", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void launchMovieDetail(Movie movie) {
 
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

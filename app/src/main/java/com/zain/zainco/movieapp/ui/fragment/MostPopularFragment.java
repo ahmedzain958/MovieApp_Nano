@@ -44,7 +44,7 @@ public class MostPopularFragment extends Fragment implements MoviesView {
 
         presenter = new MoviesPresenterImpl();
         presenter.setView(this);
-        presenter.getMovies(POPULAR);
+        presenter.getMovies(POPULAR,getActivity());
 
         moviesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -91,10 +91,7 @@ public class MostPopularFragment extends Fragment implements MoviesView {
         Toast.makeText(getActivity(), "Can't Connect", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void launchMovieDetail(Movie movie) {
 
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

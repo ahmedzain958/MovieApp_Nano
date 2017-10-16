@@ -1,5 +1,8 @@
 package com.zain.zainco.movieapp.ui.fragment;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -31,9 +34,13 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.zain.zainco.movieapp.database.FavouriteDatabase.delete;
-import static com.zain.zainco.movieapp.database.FavouriteDatabase.markFavourite;
-import static com.zain.zainco.movieapp.database.FavouriteDatabase.markedAsFav;
+import static com.zain.zainco.movieapp.app.MoviesProvider._URI;
+import static com.zain.zainco.movieapp.database.Constant.AVERAGERATING;
+import static com.zain.zainco.movieapp.database.Constant.BACKDROPPATH;
+import static com.zain.zainco.movieapp.database.Constant.ID;
+import static com.zain.zainco.movieapp.database.Constant.OVERVIEW;
+import static com.zain.zainco.movieapp.database.Constant.POSTERPATH;
+import static com.zain.zainco.movieapp.database.Constant.TITLE;
 
 public class MovieDetailsFragment extends Fragment implements TrailersView, ReviewsView {
     @BindView(R.id.backdrop)
@@ -108,7 +115,18 @@ public class MovieDetailsFragment extends Fragment implements TrailersView, Revi
                 favourite.setText(null);
                 favourite.setTextOff(null);
                 favourite.setTextOn(null);
-                if (!markedAsFav(movie.getId().toString())) {
+                /*if (!markedAsFav(movie.getId().toString())) {
+                    favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_off));
+                    favourite.setChecked(false);
+                } else {
+                    favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_on));
+                    favourite.setChecked(true);
+                }*/
+
+//                Uri returnUri = ContentUris.withAppendedId(_URI, ); // URI to be returned
+                Uri uri = _URI.buildUpon().appendPath(movie.getId().toString()).build();
+                Cursor c = getActivity().getContentResolver().query(uri, null, null, null, null);
+                if (!c.moveToFirst()) {
                     favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_off));
                     favourite.setChecked(false);
                 } else {
@@ -118,7 +136,7 @@ public class MovieDetailsFragment extends Fragment implements TrailersView, Revi
                 favourite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
+                        /*if (isChecked) {
                             favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_on));
                             if (markFavourite(movie.getId().toString(), movie.getTitle(), movie.getBackdropPath(), movie.getPosterPath(),
                                     movie.getReleaseDate(), String.valueOf(movie.getVoteAverage()),
@@ -129,6 +147,41 @@ public class MovieDetailsFragment extends Fragment implements TrailersView, Revi
                         } else {
                             favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_off));
                             delete(movie.getId().toString());
+                        }*/
+                        if (isChecked) {
+                            ContentValues values = new ContentValues();
+                            values.put(ID,
+                                    movie.getId());
+
+                            values.put(TITLE,
+                                    movie.getTitle());
+
+                            values.put(BACKDROPPATH,
+                                    movie.getBackdropPath());
+
+                            values.put(POSTERPATH,
+                                    movie.getPosterPath());
+
+                            values.put(AVERAGERATING,
+                                    movie.getVoteAverage());
+
+                            values.put(OVERVIEW,
+                                    movie.getOverview());
+
+
+                            Uri uri = getContext().getContentResolver().insert(
+                                    _URI, values);
+                            favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_on));
+                            Toast.makeText(getActivity(), uri.toString(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Uri uri = _URI.buildUpon().appendPath(Integer.toString(movie.getId())).build();
+                            int deleted = getActivity().getContentResolver().delete(uri, null, null);
+                            if (deleted != 0) {
+                                favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_off));
+                                Toast.makeText(getActivity(), movie.getTitle() + " movie removed", Toast.LENGTH_SHORT).show();
+
+                            }
+
                         }
                     }
                 });
