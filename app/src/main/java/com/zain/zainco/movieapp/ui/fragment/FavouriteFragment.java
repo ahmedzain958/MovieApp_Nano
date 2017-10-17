@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.zain.zainco.movieapp.R;
 import com.zain.zainco.movieapp.model.Movie;
@@ -17,13 +16,12 @@ import com.zain.zainco.movieapp.ui.activity.MovieDetailsActivity;
 import com.zain.zainco.movieapp.ui.adapter.MoviesAdapter;
 import com.zain.zainco.movieapp.ui.repository.MoviesPresenterImpl;
 import com.zain.zainco.movieapp.ui.repository.MoviesView;
-import com.zain.zainco.movieapp.utils.NetwokConnectivity;
 
 import java.util.ArrayList;
 
-import static com.zain.zainco.movieapp.app.Constants.POPULAR;
+import static com.zain.zainco.movieapp.app.Constants.FAVOURITE;
 
-public class MostPopularFragment extends Fragment implements MoviesView {
+public class FavouriteFragment extends Fragment implements MoviesView {
     GridView moviesGridView;
     MoviesAdapter moviesAdapter;
 
@@ -36,15 +34,23 @@ public class MostPopularFragment extends Fragment implements MoviesView {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+
+        if (isVisibleToUser) {
+
+        }
+    }
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_most_popular, container, false);
+        View view = inflater.inflate(R.layout.fragment_favourite, container, false);
         moviesGridView = view.findViewById(R.id.movies_gv);
 
         presenter = new MoviesPresenterImpl();
         presenter.setView(this);
-        presenter.getMovies(POPULAR,getActivity());
+        presenter.getMovies(FAVOURITE, getActivity());
 
         moviesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -56,7 +62,7 @@ public class MostPopularFragment extends Fragment implements MoviesView {
         });
         if (savedInstanceState != null && savedInstanceState.getParcelableArrayList("gvState") != null) {
             ArrayList<Movie> items = savedInstanceState.getParcelableArrayList("gvState");
-            moviesAdapter.setMovies(items); // Load saved data if any.
+            moviesAdapter.setMovies(items);
         }
         return view;
     }
@@ -69,19 +75,16 @@ public class MostPopularFragment extends Fragment implements MoviesView {
 
     @Override
     public void showMovies(ArrayList<Movie> moviesList) {
-        if (new NetwokConnectivity().isNetworkAvailable()) {
-            moviesAdapter = new MoviesAdapter(getActivity(), moviesList);
-            moviesGridView.setAdapter(moviesAdapter);
-        } else {
-            showErrorMessage();
-        }
+
+
+        moviesAdapter = new MoviesAdapter(getActivity(), moviesList);
+        moviesGridView.setAdapter(moviesAdapter);
+
     }
 
     @Override
     public void showErrorMessage() {
-        Toast.makeText(getActivity(), "Can't Connect", Toast.LENGTH_SHORT).show();
     }
-
 
 
     @Override

@@ -40,6 +40,7 @@ import static com.zain.zainco.movieapp.database.Constant.BACKDROPPATH;
 import static com.zain.zainco.movieapp.database.Constant.ID;
 import static com.zain.zainco.movieapp.database.Constant.OVERVIEW;
 import static com.zain.zainco.movieapp.database.Constant.POSTERPATH;
+import static com.zain.zainco.movieapp.database.Constant.REALEASEDATE;
 import static com.zain.zainco.movieapp.database.Constant.TITLE;
 
 public class MovieDetailsFragment extends Fragment implements TrailersView, ReviewsView {
@@ -115,39 +116,23 @@ public class MovieDetailsFragment extends Fragment implements TrailersView, Revi
                 favourite.setText(null);
                 favourite.setTextOff(null);
                 favourite.setTextOn(null);
-                /*if (!markedAsFav(movie.getId().toString())) {
-                    favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_off));
-                    favourite.setChecked(false);
-                } else {
-                    favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_on));
-                    favourite.setChecked(true);
-                }*/
 
-//                Uri returnUri = ContentUris.withAppendedId(_URI, ); // URI to be returned
+
                 Uri uri = _URI.buildUpon().appendPath(movie.getId().toString()).build();
                 Cursor c = getActivity().getContentResolver().query(uri, null, null, null, null);
-                if (!c.moveToFirst()) {
-                    favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_off));
-                    favourite.setChecked(false);
-                } else {
-                    favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_on));
-                    favourite.setChecked(true);
+                if (c != null) {
+                    if (c.getCount() >= 1) {
+                        favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_on));
+                        favourite.setChecked(true);
+                    } else {
+                        favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_off));
+                        favourite.setChecked(false);
+                    }
+                    c.close();
                 }
                 favourite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        /*if (isChecked) {
-                            favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_on));
-                            if (markFavourite(movie.getId().toString(), movie.getTitle(), movie.getBackdropPath(), movie.getPosterPath(),
-                                    movie.getReleaseDate(), String.valueOf(movie.getVoteAverage()),
-                                    movie.getOverview()) > 0) {
-                                Toast.makeText(getActivity(), movie.getTitle() + " movie marked as Favourite", Toast.LENGTH_SHORT).show();
-                            }
-
-                        } else {
-                            favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_off));
-                            delete(movie.getId().toString());
-                        }*/
                         if (isChecked) {
                             ContentValues values = new ContentValues();
                             values.put(ID,
@@ -168,18 +153,17 @@ public class MovieDetailsFragment extends Fragment implements TrailersView, Revi
                             values.put(OVERVIEW,
                                     movie.getOverview());
 
-
-                            Uri uri = getContext().getContentResolver().insert(
-                                    _URI, values);
+                            values.put(REALEASEDATE,
+                                    movie.getReleaseDate());
+                            Uri uri = getContext().getContentResolver().insert(_URI, values);
                             favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_on));
-                            Toast.makeText(getActivity(), uri.toString(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), movie.getTitle() + " movie added", Toast.LENGTH_SHORT).show();
                         } else {
                             Uri uri = _URI.buildUpon().appendPath(Integer.toString(movie.getId())).build();
                             int deleted = getActivity().getContentResolver().delete(uri, null, null);
                             if (deleted != 0) {
                                 favourite.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.star_off));
                                 Toast.makeText(getActivity(), movie.getTitle() + " movie removed", Toast.LENGTH_SHORT).show();
-
                             }
 
                         }
@@ -187,18 +171,7 @@ public class MovieDetailsFragment extends Fragment implements TrailersView, Revi
                 });
             }
         }
-
         return view;
-    }
-
-    @Override
-    public void showLoading() {
-
-    }
-
-    @Override
-    public void hideLoading() {
-
     }
 
     @Override
@@ -206,9 +179,7 @@ public class MovieDetailsFragment extends Fragment implements TrailersView, Revi
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(getActivity());
         recycle_reviews.setLayoutManager(layoutManager);
-
-
-        adapterReviews = new ReviewsAdapter(getActivity(), reviewsList);
+        adapterReviews = new ReviewsAdapter(reviewsList);
         recycle_reviews.setAdapter(adapterReviews);
     }
 
@@ -217,8 +188,6 @@ public class MovieDetailsFragment extends Fragment implements TrailersView, Revi
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recycle_trailers.setLayoutManager(layoutManager);
-
-
         adapter = new TrailersAdapter(getActivity(), trailersList);
         recycle_trailers.setAdapter(adapter);
     }

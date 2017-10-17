@@ -9,10 +9,6 @@ import java.util.ArrayList;
  */
 
 public interface MoviesView {
-    void showLoading();
-
-    void hideLoading();
-
     void showMovies(ArrayList<Movie> moviesList);
 
     void showErrorMessage();

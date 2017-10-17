@@ -27,12 +27,9 @@ import static com.zain.zainco.movieapp.app.Constants.TOP_RATED;
 public class TopRatedFragment extends Fragment implements MoviesView {
     GridView moviesGridView;
     MoviesAdapter moviesAdapter;
-
-
     private MoviesPresenterImpl presenter;
 
     public TopRatedFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -44,7 +41,6 @@ public class TopRatedFragment extends Fragment implements MoviesView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_top_rated, container, false);
 
 
@@ -72,15 +68,6 @@ public class TopRatedFragment extends Fragment implements MoviesView {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    @Override
-    public void showLoading() {
-
-    }
-
-    @Override
-    public void hideLoading() {
-
-    }
 
     @Override
     public void showMovies(ArrayList<Movie> moviesList) {
@@ -98,15 +85,12 @@ public class TopRatedFragment extends Fragment implements MoviesView {
     }
 
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (!outState.containsKey("gvState") && outState.getParcelableArrayList("gvState") != null)
             outState.putParcelableArrayList("gvState", moviesAdapter.getMovies());
     }
-
-
 
 
 }
